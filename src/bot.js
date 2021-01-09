@@ -6,6 +6,7 @@ const { Client } = require("discord.js");
 
 const client = new Client();
 const PREFIX = "$";
+const DELAY_BETWEEN_IMAGES = 15000;
 
 client.login(process.env.DISCORDJS_BOT_TOKEN);
 
@@ -52,7 +53,7 @@ const getRandomUrl = (channelName) => {
         urlMap[channelName] = loadUrls(channelName);
     }
     const lines = urlMap[channelName];
-    if (!lines.length) return "";
+    if (!lines && !lines.length) return "";
     const url = lines[getRandomInt(lines.length)];
     return url;
 }
@@ -61,7 +62,7 @@ const postImage = (message, channelName) => {
     message.channel.send(getRandomUrl(channelName));
 }
 
-let ongoingFeed = false;
+let ongoingFeed = {};
 
 client.on('message', async (message) => {
     if (message.author.bot) return;
@@ -76,11 +77,12 @@ client.on('message', async (message) => {
         if (command == 'clean') {
             cleanChannel(message.channel);
         }
+
         if (command !== 'feed') return;
-        if (ongoingFeed) {
-            message.channel.send("Feed ongoing");
+        if (ongoingFeed[channelName]) {
+            message.channel.send(`${channelName} feed ongoing.`);
         } else {
-            ongoingFeed = true;
+            ongoingFeed[channelName] = true;
             const imagesToFeed = +args[0];
             if (imagesToFeed > 30) {
                 message.channel.send("Maximum allowed images: 30. Streaming 30 images now");
@@ -88,9 +90,9 @@ client.on('message', async (message) => {
             }
             for (let i = 0; i < imagesToFeed; i++) {
                 postImage(message, channelName);
-                await setTimeoutPromise(10000);
+                if (i !== imagesToFeed - 1) await setTimeoutPromise(DELAY_BETWEEN_IMAGES);
             }
-            ongoingFeed = false;
+            ongoingFeed[channelName] = false;
         }
             
     }

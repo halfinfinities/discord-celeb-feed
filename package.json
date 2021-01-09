@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./src/bot.js",
+    "start": "forever ./src/bot.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon ./src/bot.js"
   },
@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "discord.js": "^12.5.1",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "forever": "^3.0.4"
   }
 }
