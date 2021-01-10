@@ -21,5 +21,6 @@ exports.feed = async (channel, numberOfImages) => {
             if (i !== numberOfImages - 1) await setTimeoutPromise(DELAY_BETWEEN_IMAGES);
         }
         ongoingFeed[channelName] = false;
+        channel.send(`${numberOfImages} image feed complete`);
     }
 }
