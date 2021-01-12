@@ -1,5 +1,5 @@
 const { Client } = require("discord.js");
-const { cleanChannel, feed } = require('./command-processors');
+const { cleanChannel, feed, dm } = require('./command-processors');
 
 
 
@@ -7,7 +7,7 @@ const client = new Client();
 const PREFIX = "$";
 
 require("dotenv").config();
-
+const totalRequestsMade = {};
 
 client.login(process.env.DISCORDJS_BOT_TOKEN);
 
@@ -20,7 +20,7 @@ client.on('message', async (message) => {
     if (message.author.bot) return;
     const content = message.content;
     const authorTag = message.author.tag;
-    
+    const channelName = message.channel.name;
     if (content.startsWith(PREFIX)) {
         const [command, ...args] = content
             .trim()
@@ -35,7 +35,22 @@ client.on('message', async (message) => {
                 return;
             }
             feed(message.channel, numberOfImages);
+        } else if (command == 'dm') {
+            if (isNaN(args[0])) {
+                message.channel.send('You need to enter the number of images you need. Command: $feed number');
+                return;
+            }
+            
+            dm(message.author, channelName, numberOfImages, 'start');
+        } else if (command === 'stop') {
+            if (message.channel.type === 'dm') {
+                dm(message.author, channelName, numberOfImages, 'stop');
+            } else {
+                message.channel.send('Don\'t worry about stopping channel feeds. The $stop command is needed only when the bot is DM\'ing you a feed');
+            }
+
         }
+
     }
     console.log(`${authorTag} - ${content}`);
 });

@@ -31,7 +31,7 @@ exports.getRandomUrl = (channelName) => {
         urlMap[channelName] = loadUrls(channelName);
     }
     const lines = urlMap[channelName];
-    if (!lines && !lines.length) return "";
+    if (lines && !lines.length) return " ";
     const url = lines[getRandomInt(lines.length)];
     return url;
 }

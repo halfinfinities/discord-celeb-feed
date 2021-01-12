@@ -1,0 +1,11 @@
+let allLinks = new Set();
+setInterval(() => { [...document.querySelectorAll(".chatContent-a9vAAp a[href^='https://cdn.discordapp.com/attachments']")].map(e => e.href).forEach(link => allLinks.add(link)); }, 500)
+
+<textarea id="k-output"></textarea>
+
+let output = ''; allLinks.forEach(l => output = output + l + '\n');document.getElementById('k-output').value = output
+
+
+Welcome to the _best_ celeb feed bot server online. Enjoy an automated feed of sexy pictures of your favorite celebs, anytime you want!
+
+The bot is custom-built for this specific server, with the richest database of celeb images (current count of images total is 24,000 and counting). 
